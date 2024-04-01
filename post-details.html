@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+
+    <style>
+
+        #pageThree {
+            display: grid;
+            justify-content: space-evenly;
+            grid-template-columns: 20vw 20vw 20vw 20vw;
+            grid-template-rows: 20vw 20vw 20vw 20vw;
+        }
+
+        .styleComments {
+            background-color: darkseagreen;
+            margin: 0.3vw;
+            padding: 0.3vw;
+            font-size: 1vw;
+        }
+
+        .styleComments > p {
+            background-color: cornsilk;
+            margin: 0.3vw;
+            padding: 0.3vw;
+            font-size: 1vw;
+        }
+
+    </style>
+
+
+</head>
+<body>
+
+<div id="pageThree"></div>
+
+<script>
+
+    // ------------------------------------------------get_URL_userId_comments------------------------------------------
+
+    let postId = new URL(location.href).searchParams.get('userId')
+    let URLComments = 'https://jsonplaceholder.typicode.com/posts/' + postId + '/comments'
+    console.log(URLComments)
+
+    fetch(URLComments)
+        .then(res => res.json())
+        .then(data => {
+            console.log(data)
+            getComments(data)
+        })
+
+    // ----------------------------------------------get_userId_total_comments----------------------------------------------
+
+    let pageThree = document.getElementById('pageThree')
+
+    function getComments(commentsData) {
+        console.log(commentsData)
+
+        for (let elementComments of commentsData) {
+
+            let divComments = document.createElement('div')
+            divComments.classList.add('styleComments')
+            pageThree.appendChild(divComments)
+
+            let pPostId = document.createElement('p')
+            pPostId.innerText = `postId - ${elementComments.postId}`
+
+            let pId = document.createElement('p')
+            pId.innerText = `id - ${elementComments.id}`
+
+            let pName = document.createElement('p')
+            pName.innerText = `name - ${elementComments.name}`
+
+            let pEmail = document.createElement('p')
+            pEmail.innerText = `email - ${elementComments.email}`
+
+            let pBody = document.createElement('p')
+            pBody.innerText = `body - ${elementComments.body}`
+
+            divComments.append(pId, pPostId, pName, pEmail, pBody)
+        }
+    }
+
+
+</script>
+
+</body>
+</html>

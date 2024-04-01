@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+
+        #pageTwo {
+            margin: 0;
+            display: flex;
+        }
+
+        /*----------------------------------------------style_user_id_total_info----------------------------------------------------*/
+        #generalInfo, #addressInfo, #companyInfo {
+            display: block;
+            align-items: center;
+            justify-content: center;
+            width: 50vw;
+            font-size: 1vw;
+            margin: 0.3vw;
+            padding: 0.3vw;
+            background-color: grey;
+            text-align: center;
+        }
+
+        p {
+            background-color: lightgrey;
+            margin: 0.3vw;
+            padding: 0.3vw;
+            font-size: 1vw;
+        }
+
+        #postsButton {
+            width: 90vw;
+            font-size: 1vw;
+            cursor: pointer;
+            padding: 10px;
+            margin: 2vw 4vw;
+            background-color: navajowhite;
+            border-radius: 5px;
+        }
+
+        /*---------------------------------------style_userId_post_titles---------------------------------------------*/
+
+        #postsInfo {
+            display: grid;
+            justify-content: space-evenly;
+            grid-template-columns: 15vw 15vw 15vw 15vw 15vw;
+            grid-template-rows: 10vw 10vw;
+        }
+
+        .stylePostTitle {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: space-evenly;
+            text-align: center;
+            background-color: darkseagreen;
+            margin: 10px;
+        }
+
+        .styleButtonPost {
+            margin: 0.3vw;
+            padding: 0.3vw;
+            font-size: 1vw;
+            border-radius: 5px;
+            cursor: pointer;
+            background-color: navajowhite;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<div id="pageTwo">
+    <div id="generalInfo"><h3>General:</h3></div>
+    <div id="addressInfo"><h3>Address:</h3></div>
+    <div id="companyInfo"><h3>Company:</h3></div>
+</div>
+
+<button id="postsButton">post of current user</button>
+
+<div id="postsInfo"></div>
+
+<script>
+
+    // -----------------------------------------------get_URL_userId----------------------------------------------------
+
+    let userId = new URL(location.href).searchParams.get('id')
+    let baseURL = 'https://jsonplaceholder.typicode.com/users/' + userId
+
+    fetch(baseURL)
+        .then(res => res.json())
+        .then(data => {
+            getUserIdData(data)
+        })
+    // --------------------------------------------------get_userId_data----------------------------------------------------
+
+    let generalInfo = document.getElementById('generalInfo')
+    let addressInfo = document.getElementById('addressInfo')
+    let companyInfo = document.getElementById('companyInfo')
+
+    function getUserIdData(usersIdData) {
+
+        for (let element in usersIdData) {
+            if (element === 'address') {
+                address(usersIdData.address)
+            } else if (element === 'company') {
+                company(usersIdData.company)
+            } else {
+                let pGeneral = document.createElement('p')
+                generalInfo.appendChild(pGeneral)
+                pGeneral.innerText = `${element} - ${usersIdData[element]}`
+            }
+        }
+    }
+
+
+    function address(elementsAddress) {
+
+        for (let elementAddress in elementsAddress) {
+            let pAddress = document.createElement('p')
+
+            if (elementAddress !== 'geo') {
+                pAddress.innerText = `${elementAddress} - ${elementsAddress[elementAddress]}`
+                addressInfo.append(pAddress)
+
+            } else {
+                let pGeo = document.createElement('p')
+                addressInfo.appendChild(pGeo)
+                pGeo.innerText = `geo - lat: ${elementsAddress.geo.lat}, lng: ${elementsAddress.geo.lng}`
+            }
+        }
+    }
+
+
+    function company(elementsCompany) {
+
+        for (let elementCompany in elementsCompany) {
+            let pCompany = document.createElement('p')
+            companyInfo.appendChild(pCompany)
+            pCompany.innerText = `${elementCompany} - ${elementsCompany[elementCompany]}`
+        }
+    }
+
+    // --------------------------------------------get_URL_userId_button_posts------------------------------------------
+
+    let URLPosts = 'https://jsonplaceholder.typicode.com/users/' + userId + '/posts'
+    let postsButton = document.getElementById('postsButton')
+
+    fetch(URLPosts)
+        .then(res => res.json())
+        .then(data => {
+            postsButton.addEventListener("click", function () {
+                getPosts(data)
+            })
+        })
+
+    // ------------------------------------------get_userId_post's_title_and_button---------------------------------------
+
+    function getPosts(postsData) {
+        console.log(postsData)
+
+        let postsInfo = document.getElementById('postsInfo')
+        postsInfo.innerHTML = ''
+
+        for (let post of postsData) {
+
+            let divPost = document.createElement('div')
+            divPost.classList.add('stylePostTitle')
+            postsInfo.appendChild(divPost)
+
+            let pTitle = document.createElement('p')
+            pTitle.innerText = `title - ${post.title}`
+
+            let doButtonPost = document.createElement('button')
+            doButtonPost.classList.add('styleButtonPost')
+            doButtonPost.innerText = 'click'
+            doButtonPost.addEventListener("click", function () {
+                location.href = `post-details.html?userId=` + post.id
+            })
+
+            divPost.append(pTitle, doButtonPost)
+        }
+    }
+
+
+</script>
+</body>
+</html>

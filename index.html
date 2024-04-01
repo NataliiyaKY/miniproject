@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+
+        #pageOne {
+            margin: 0;
+            display: grid;
+            justify-content: center;
+            grid-template-columns: 30vw 30vw;
+            grid-template-rows: 17vh 17vh 17vh 17vh 17vh;
+        }
+
+        .styleDivUser {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: grey;
+            margin: 0.3vw;
+        }
+
+        .styleDivUser > p {
+            background-color: lightgrey;
+            margin: 0.3vw;
+            padding: 0.3vw;
+            font-size: 1vw;
+        }
+
+        .styleButtonUsers {
+            margin: 0.3vw;
+            padding: 0.3vw;
+            font-size: 1vw;
+            background-color: navajowhite;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+    </style>
+
+</head>
+<body>
+
+<div id="pageOne"></div>
+
+<script>
+    // -------------------------------------------------get_URL_all_users-----------------------------------------------
+
+    const URL = 'https://jsonplaceholder.typicode.com/users'
+
+    function getURL(url) {
+        fetch(url)
+            .then(res => res.json())
+            .then(data => {
+                getUsers(data)
+            })
+    }
+
+    getURL(URL)
+
+    // --------------------------------------------------get_the_list_of_all_users--------------------------------------
+
+    let container = document.getElementById('pageOne')
+
+    function getUsers(usersData) {
+
+        for (let user of usersData) {
+
+            let divUser = document.createElement('div')
+            divUser.classList.add('styleDivUser')
+            container.appendChild(divUser)
+
+            let pIdUser = document.createElement('p')
+            pIdUser.innerText = `id - ${user.id}`
+
+            let pNameUser = document.createElement('p')
+            pNameUser.innerText = `name - ${user.name}`
+
+            let doButtonUser = document.createElement('button')
+            doButtonUser.classList.add('styleButtonUsers')
+            doButtonUser.innerText = 'click'
+            doButtonUser.onclick = function () {
+                location.href = 'user-details.html?id=' + user.id
+            }
+
+            divUser.append(pIdUser, pNameUser, doButtonUser)
+        }
+    }
+
+</script>
+
+</body>
+</html>
